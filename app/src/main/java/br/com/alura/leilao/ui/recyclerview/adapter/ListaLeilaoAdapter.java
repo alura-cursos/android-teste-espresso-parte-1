@@ -68,6 +68,7 @@ public class ListaLeilaoAdapter extends RecyclerView.Adapter<ListaLeilaoAdapter.
 
         ViewHolder(View itemView) {
             super(itemView);
+            itemView.setVisibility(View.INVISIBLE);
             descricao = itemView.findViewById(R.id.item_leilao_descricao);
             maiorLance = itemView.findViewById(R.id.item_leilao_maior_lance);
             itemView.setOnClickListener(new View.OnClickListener() {
