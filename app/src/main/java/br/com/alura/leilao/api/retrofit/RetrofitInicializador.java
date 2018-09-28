@@ -12,7 +12,7 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.BODY;
 
 public class RetrofitInicializador {
 
-    private static final String URL_BASE = "http://192.168.20.248:8080/";
+    private static final String URL_BASE = "http://192.168.20.248:8081/";
     private final Retrofit retrofit;
 
     public RetrofitInicializador() {
