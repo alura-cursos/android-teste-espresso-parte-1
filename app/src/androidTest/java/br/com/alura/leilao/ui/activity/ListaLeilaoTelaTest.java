@@ -21,10 +21,17 @@ public class ListaLeilaoTelaTest {
 
     @Rule
     public ActivityTestRule<ListaLeilaoActivity> activity =
-            new ActivityTestRule<>(ListaLeilaoActivity.class, true, true);
+            new ActivityTestRule<>(ListaLeilaoActivity.class, true, false);
 
     @Test
-    public void deve_AparecerUmLeilao_QuandoCarregarUmLeilaoNaApi() {
+    public void deve_AparecerUmLeilao_QuandoCarregarUmLeilaoNaApi() throws IOException {
+        Leilao carroSalvo = new LeilaoWebClient().salva(new Leilao("Carro"));
+        if(carroSalvo == null){
+            Assert.fail("Leilão não foi salvo");
+        }
+
+        activity.launchActivity(new Intent());
+
         onView(withText("Carro"))
                 .check(matches(isDisplayed()));
     }
