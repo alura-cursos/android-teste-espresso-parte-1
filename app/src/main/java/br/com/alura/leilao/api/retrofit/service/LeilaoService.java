@@ -22,4 +22,6 @@ public interface LeilaoService {
     @POST("leilao")
     Call<Leilao> salva(@Body Leilao leilao);
 
+    @GET("reset")
+    Call<Void> limpaBancoDeDados();
 }
