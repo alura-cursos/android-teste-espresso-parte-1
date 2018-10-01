@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import br.com.alura.leilao.api.retrofit.client.LeilaoWebClient;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
 import br.com.alura.leilao.model.Leilao;
 

@@ -10,10 +10,20 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    testBuildType = 'simulado'
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField('String', 'URL_BASE', '"http://192.168.20.248:8080/"')
+        }
+        simulado {
+            initWith(buildTypes.debug)
+            buildConfigField('String', 'URL_BASE', '"http://192.168.20.248:8081/"')
         }
     }
 
