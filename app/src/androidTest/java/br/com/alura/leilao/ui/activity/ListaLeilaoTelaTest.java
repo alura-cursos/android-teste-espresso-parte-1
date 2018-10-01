@@ -43,4 +43,28 @@ public class ListaLeilaoTelaTest {
                 .check(matches(isDisplayed()));
     }
 
+    @Test
+    public void deve_AparecerDoisLeiloes_QuandoCarregarDoisLeiloesDaApi() throws IOException {
+        TesteWebClient webClient = new TesteWebClient();
+
+        boolean bancoDeDadosNaoFoiLimpo = !webClient.limpaBancoDeDados();
+        if(bancoDeDadosNaoFoiLimpo){
+            Assert.fail("Banco de dados não foi limpo");
+        }
+
+        Leilao carroSalvo = webClient.salva(new Leilao("Carro"));
+        Leilao computadorSalvo = webClient.salva(new Leilao("Computador"));
+        if(carroSalvo == null || computadorSalvo == null){
+            Assert.fail("Leilão não foi salvo");
+        }
+
+        activity.launchActivity(new Intent());
+
+        onView(withText("Carro"))
+                .check(matches(isDisplayed()));
+
+        onView(withText("Computador"))
+                .check(matches(isDisplayed()));
+    }
+
 }
