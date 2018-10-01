@@ -3,7 +3,9 @@ package br.com.alura.leilao.ui.activity;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -19,23 +21,21 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 public class ListaLeilaoTelaTest {
 
+    private static final String ERRO_FALHA_LIMPEZA_DE_DADOS_DA_API = "Banco de dados não foi limpo";
+    private static final String LEILAO_NAO_FOI_SALVO = "Leilão não foi salvo: ";
     @Rule
     public ActivityTestRule<ListaLeilaoActivity> activity =
             new ActivityTestRule<>(ListaLeilaoActivity.class, true, false);
+    private final TesteWebClient webClient = new TesteWebClient();
+
+    @Before
+    public void setup() throws IOException {
+        limpaBancoDeDadosDaApi();
+    }
 
     @Test
     public void deve_AparecerUmLeilao_QuandoCarregarUmLeilaoNaApi() throws IOException {
-        TesteWebClient webClient = new TesteWebClient();
-
-        boolean bancoDeDadosNaoFoiLimpo = !webClient.limpaBancoDeDados();
-        if(bancoDeDadosNaoFoiLimpo){
-            Assert.fail("Banco de dados não foi limpo");
-        }
-
-        Leilao carroSalvo = webClient.salva(new Leilao("Carro"));
-        if(carroSalvo == null){
-            Assert.fail("Leilão não foi salvo");
-        }
+        tentaSalvarLeilaoNaApi(new Leilao("Carro"));
 
         activity.launchActivity(new Intent());
 
@@ -45,18 +45,9 @@ public class ListaLeilaoTelaTest {
 
     @Test
     public void deve_AparecerDoisLeiloes_QuandoCarregarDoisLeiloesDaApi() throws IOException {
-        TesteWebClient webClient = new TesteWebClient();
-
-        boolean bancoDeDadosNaoFoiLimpo = !webClient.limpaBancoDeDados();
-        if(bancoDeDadosNaoFoiLimpo){
-            Assert.fail("Banco de dados não foi limpo");
-        }
-
-        Leilao carroSalvo = webClient.salva(new Leilao("Carro"));
-        Leilao computadorSalvo = webClient.salva(new Leilao("Computador"));
-        if(carroSalvo == null || computadorSalvo == null){
-            Assert.fail("Leilão não foi salvo");
-        }
+        tentaSalvarLeilaoNaApi(
+                new Leilao("Carro"),
+                new Leilao("Computador"));
 
         activity.launchActivity(new Intent());
 
@@ -65,6 +56,27 @@ public class ListaLeilaoTelaTest {
 
         onView(withText("Computador"))
                 .check(matches(isDisplayed()));
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        limpaBancoDeDadosDaApi();
+    }
+
+    private void limpaBancoDeDadosDaApi() throws IOException {
+        boolean bancoDeDadosNaoFoiLimpo = !webClient.limpaBancoDeDados();
+        if (bancoDeDadosNaoFoiLimpo) {
+            Assert.fail(ERRO_FALHA_LIMPEZA_DE_DADOS_DA_API);
+        }
+    }
+
+    private void tentaSalvarLeilaoNaApi(Leilao... leiloes) throws IOException {
+        for (Leilao leilao : leiloes){
+            Leilao leilaoSalvo = webClient.salva(leilao);
+            if (leilaoSalvo == null) {
+                Assert.fail(LEILAO_NAO_FOI_SALVO + leilao.getDescricao());
+            }
+        }
     }
 
 }
