@@ -13,6 +13,7 @@ import java.io.IOException;
 
 import br.com.alura.leilao.R;
 import br.com.alura.leilao.api.retrofit.client.TesteWebClient;
+import br.com.alura.leilao.formatter.FormatadorDeMoeda;
 import br.com.alura.leilao.model.Leilao;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -30,6 +31,7 @@ public class ListaLeilaoTelaTest {
     public ActivityTestRule<ListaLeilaoActivity> activity =
             new ActivityTestRule<>(ListaLeilaoActivity.class, true, false);
     private final TesteWebClient webClient = new TesteWebClient();
+    private final FormatadorDeMoeda formatadorDeMoeda = new FormatadorDeMoeda();
 
     @Before
     public void setup() throws IOException {
@@ -45,6 +47,12 @@ public class ListaLeilaoTelaTest {
         onView(allOf(withText("Carro"),
                 withId(R.id.item_leilao_descricao)))
                 .check(matches(isDisplayed()));
+
+        String formatoEsperado = formatadorDeMoeda.formata(0.00);
+
+        onView(allOf(withText(formatoEsperado),
+                withId(R.id.item_leilao_maior_lance)))
+                .check(matches(isDisplayed()));
     }
 
     @Test
@@ -58,7 +66,19 @@ public class ListaLeilaoTelaTest {
         onView(allOf(withText("Carro"), withId(R.id.item_leilao_descricao)))
                 .check(matches(isDisplayed()));
 
+        String formatoEsperadoParaCarro = formatadorDeMoeda.formata(0.00);
+
+        onView(allOf(withText(formatoEsperadoParaCarro),
+                withId(R.id.item_leilao_maior_lance)))
+                .check(matches(isDisplayed()));
+
         onView(allOf(withText("Computador"), withId(R.id.item_leilao_descricao)))
+                .check(matches(isDisplayed()));
+
+        String formatoEsperadoParaComputador = formatadorDeMoeda.formata(0.00);
+
+        onView(allOf(withText(formatoEsperadoParaComputador),
+                withId(R.id.item_leilao_maior_lance)))
                 .check(matches(isDisplayed()));
     }
 
